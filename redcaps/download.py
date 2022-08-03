@@ -62,7 +62,8 @@ def download_anns(
 
     # Load Reddit and Imgur API credentials.
     credentials = json.load(open(credentials))
-    cprint.white(f"Downloading posts from {subreddit}, {yyyy_mm.strftime('%Y-%m')}")
+    cprint.white(
+        f"Downloading posts from {subreddit}, {yyyy_mm.strftime('%Y-%m')}")
 
     # Iterate over all days of the month. Calendar module returns extra dates
     # from preceeding and succeeding months as per weeks, so filter them.
@@ -185,14 +186,13 @@ def download_imgs(
 def _image_worker(args):
     r"""Helper method for parallelizing image downloads."""
     image_url, image_savepath, image_downloader = args
-
-    download_status = image_downloader.download(image_url, save_to=image_savepath)
-
+    proxy_url = f"https://proxy.duckduckgo.com/iu/?u={image_url}" if 'imgur.com' in image_url else image_url
+    download_status = image_downloader.download(proxy_url, save_to=image_savepath)
     # Sleep for 2 seconds for Imgur, and 0.1 seconds for Reddit and Flickr.
     # This takes care of all request rate limits.
-    if "imgur" in image_url:
-        time.sleep(2.0)
-    else:
-        time.sleep(0.1)
+    # if "imgur" in image_url:
+    #     time.sleep(2.0)
+    # else:
+    #     time.sleep(0.1)
 
     return download_status

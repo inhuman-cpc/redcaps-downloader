@@ -38,6 +38,7 @@ MANIFEST
 # virtualenv
 venv/
 ENV/
+.env
 
 datasets/
 credentials.json
